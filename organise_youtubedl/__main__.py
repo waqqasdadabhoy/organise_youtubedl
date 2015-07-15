@@ -1,9 +1,12 @@
 import sys
 
-import organise_youtubedl.organise
+from organise_youtubedl.organise import organise
+from organise_youtubedl.createlist import createlist
 
-config = {
-    'organised_files_dir': "Youtube"
+conf = {
+    'organised_files_dir': "Youtube",
+    'ydl_opts': {'proxy':'192.168.7.20:8118'},
+    'list_filename': 'video_list'
 }
 
 
@@ -12,13 +15,11 @@ def download():
     pass
 
 
-def createlist():
-    print('List called')
-    pass
+
 
 commands = {
     'download': download,
-    'organise': organise_youtubedl.organise.organise(),
+    'organise': organise,
     'createlist': createlist
 }
 
@@ -26,4 +27,4 @@ if __name__ == '__main__':
     if len(sys.argv) == 1 or (not sys.argv[1] in commands):
         print("Please specify an action: " + ", ".join(commands))
         exit()
-    commands[sys.argv[1]](config)
+    commands[sys.argv[1]](conf)
