@@ -9,16 +9,7 @@ conf = {
     'list_filename': 'video_list'
 }
 
-
-def download():
-    print('Download called')
-    pass
-
-
-
-
 commands = {
-    'download': download,
     'organise': organise,
     'createlist': createlist
 }
