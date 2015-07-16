@@ -61,7 +61,7 @@ def createlist(conf):
     for path in glob.glob(conf['organised_files_dir'] + '/*/*'):
         try:
             assert isinstance(path, str)
-            print(path.encode('windows-1252', 'replace'))
+            print(path.encode(sys.stdout.encoding, 'replace'))
             if '\\' in path:
                 file = path.split('\\')[2]
                 uploader_id = path.split('\\')[1]
@@ -80,7 +80,7 @@ def createlist(conf):
                         title = ""
                         description = ""
                     data[video_id] = [uploader_id, title, description, path]
-                    print("******".join(data[video_id]).encode('windows-1252', 'replace'))
+                    print(data[video_id][1].encode(sys.stdout.encoding, 'replace'))
         except KeyboardInterrupt:
             break
 
@@ -88,12 +88,19 @@ def createlist(conf):
         pickle.dump(data, f)
 
     with open(html_path, 'w', encoding='utf-8') as f:
-        f.write('<html><head><title>Video List</title></head><body><table border=1>')
+        f.write('''<html>
+            <head>
+                <meta charset="utf-8">
+                <title>Video List</title>
+            </head>
+            <body>
+            <table border=1>''')
+        f.write('<tr><th>Video ID</th><th>Uploader ID</th><th>Video Title</th><th>Description</th>')
         for video_id in data:
-            f.write('<tr><td><a href="../' + path + '">' + video_id + '</a></td>')
+            f.write('<tr><td><a href="../' + data[video_id][3] + '">' + video_id + '</a></td>')
             f.write('<td>' + data[video_id][0] + '</td>')
-            f.write('<td>' + data[video_id][1] + '</td>')
-            f.write('<td>' + data[video_id][2] + '</td>')
+            f.write('<td>' + html.escape(data[video_id][1]) + '</td>')
+            f.write('<td>' + html.escape(data[video_id][2]).replace("\n","<br>") + '</td>')
             f.write('</tr>')
         f.write('</table></body></html>')
 
