@@ -13,7 +13,8 @@ import cgi
 conf = {
     'organised_files_dir': "Youtube",
     'ydl_opts': {'proxy': '192.168.7.20:8118'},
-    'list_filename': 'video_list'
+    'list_filename': 'video_list',
+    'debug': True,
 }
 
 
@@ -41,7 +42,7 @@ def organise(conf):
                     # json_data = json.loads(subprocess.check_output(["youtube-dl","-j", "https://www.youtube.com/watch?v="+file[-15:-4]]).decode("utf-8"))
                 except youtube_dl.utils.DownloadError:
                     continue
-                print(uploader_id, "/", file)
+                if conf['debug']: print(uploader_id, "/", file)
 
                 create_dir(uploader_id)
                 shutil.move(file, conf['organised_files_dir'] + "/" + uploader_id)
@@ -61,7 +62,7 @@ def createlist(conf):
     for path in glob.glob(conf['organised_files_dir'] + '/*/*'):
         try:
             assert isinstance(path, str)
-            print(path.encode(sys.stdout.encoding, 'replace'))
+            if conf['debug']: print(path.encode(sys.stdout.encoding, 'replace'))
             if '\\' in path:
                 file = path.split('\\')[2]
                 uploader_id = path.split('\\')[1]
@@ -80,7 +81,7 @@ def createlist(conf):
                         title = ""
                         description = ""
                     data[video_id] = [uploader_id, title, description, path]
-                    print(data[video_id][1].encode(sys.stdout.encoding, 'replace'))
+                    if conf['debug']: print(data[video_id][1].encode(sys.stdout.encoding, 'replace'))
         except KeyboardInterrupt:
             break
 
