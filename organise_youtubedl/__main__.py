@@ -82,7 +82,7 @@ def createlist(conf):
                 print("******".join(data[video_id]).encode('windows-1252', 'replace'))
 
     with open(pickle_path, 'wb') as f:
-        pickle.dump(data, pickle_path)
+        pickle.dump(data, f)
 
     with open(html_path, 'w') as f:
         f.write('<html><head><title>Video List</title></head><body><table border=1>')
