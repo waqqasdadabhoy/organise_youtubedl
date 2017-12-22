@@ -2,7 +2,9 @@
 Organise files downloaded using [youtube-dl](https://rg3.github.io/youtube-dl/)
 
 ## Getting started
-Clone the repository (or download a ZIP), and run `__main__.py`.
+- Clone the repository (or download a ZIP)
+- Edit `conf.py` as per your configuration
+- Run `__main__.py`.
 
 You must have [youtube-dl](https://rg3.github.io/youtube-dl/) installed as a `pip` package.
 

@@ -1,21 +1,13 @@
-import html
-import sys
-import os
-import shutil
-import subprocess
-import json
-import youtube_dl
-import sqlite3
 import glob
+import html
+import os
 import pickle
-import cgi
+import shutil
+import sys
 
-conf = {
-    'organised_files_dir': "Youtube",
-    'ydl_opts': {'proxy': '192.168.7.20:8118'},
-    'list_filename': 'video_list',
-    'debug': True,
-}
+import youtube_dl
+
+from organise_youtubedl.conf import conf
 
 
 def create_dir(uploader: str, conf):
