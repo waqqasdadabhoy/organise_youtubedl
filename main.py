@@ -1,3 +1,4 @@
+import argparse
 import glob
 import html
 import os
@@ -7,22 +8,24 @@ import sys
 
 import youtube_dl
 
-from organise_youtubedl.conf import conf
+from conf import conf
 
 
-def create_dir(uploader: str, conf):
+def create_dir(uploader: str, conf=conf) -> None:
+    """Create directory if it doesn't exist."""
     if not os.path.exists(conf['organised_files_dir'] + "/" + uploader):
         os.makedirs(conf['organised_files_dir'] + "/" + uploader)
 
 
-def is_file_youtube_download(filename: str):
+def is_file_youtube_download(filename: str) -> bool:
+    """Check if file is a YouTube download."""
     if filename[-16:-15] == "-":
         if not (" " in filename[-15:-4]):
             return True
     return False
 
 
-def organise(conf):
+def organise(conf=conf):
     ydl = youtube_dl.YoutubeDL(conf['ydl_opts'])
 
     for file in os.listdir("."):
@@ -34,7 +37,7 @@ def organise(conf):
                     # json_data = json.loads(subprocess.check_output(["youtube-dl","-j", "https://www.youtube.com/watch?v="+file[-15:-4]]).decode("utf-8"))
                 except youtube_dl.utils.DownloadError:
                     continue
-                if conf['debug']: print(uploader_id, "/", file)
+                if conf['debug']: print(uploader_id, "/", file.encode('charmap', errors='replace'))
 
                 create_dir(uploader_id)
                 shutil.move(file, conf['organised_files_dir'] + "/" + uploader_id)
@@ -103,7 +106,9 @@ commands = {
     'createlist': createlist
 }
 if __name__ == '__main__':
-    if len(sys.argv) == 1 or (not sys.argv[1] in commands):
-        print("Please specify an action: " + ", ".join(commands))
-        exit()
-    commands[sys.argv[1]](conf)
+    parser = argparse.ArgumentParser(description='Organise YouTube files.')
+    commands_help = ", ".join(commands)
+    parser.add_argument("command", type=str, help=commands_help)
+    args = parser.parse_args()
+
+    commands[args.command](conf)
