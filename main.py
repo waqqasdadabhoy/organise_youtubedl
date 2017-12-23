@@ -20,7 +20,14 @@ def create_dir(uploader: str, conf=conf) -> None:
 
 
 def is_file_youtube_download(filename: str) -> bool:
-    """Check if file is a YouTube download."""
+    """Check if file is a YouTube download.
+
+    >>> is_file_youtube_download("Build Real-Time Streaming ETL Pipelines with Akka Streams, Alpakka and Apache Kafka-eF8zHWamP7c.mp4")
+    True
+
+    >>> is_file_youtube_download("FactHacks-1632.mp4")
+    False
+    """
 
     # Check if file is a video
     if not any(filename.endswith(x) for x in video_extensions):
