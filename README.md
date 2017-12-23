@@ -1,10 +1,15 @@
 # organise-youtubedl
-Organise files downloaded using [youtube-dl](https://rg3.github.io/youtube-dl/)
+Organise files downloaded using [youtube-dl](https://rg3.github.io/youtube-dl/).
+
+Currently it has 2 functions:
+1. Arrange videos into folders based on uploader
+1. Generate an HTML list of videos
+
 
 ## Getting started
 - Clone the repository (or download a ZIP)
 - Edit `conf.py` as per your configuration
-- Run `__main__.py`.
+- Run `main.py`.
 
 You must have [youtube-dl](https://rg3.github.io/youtube-dl/) installed as a `pip` package.
 
