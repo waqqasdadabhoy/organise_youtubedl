@@ -11,6 +11,8 @@ import youtube_dl
 from conf import conf
 
 
+video_extensions = [".flv", ".mp4", ".mkv", ".webm"]
+
 def create_dir(uploader: str, conf=conf) -> None:
     """Create directory if it doesn't exist."""
     if not os.path.exists(conf['organised_files_dir'] + "/" + uploader):
@@ -19,6 +21,12 @@ def create_dir(uploader: str, conf=conf) -> None:
 
 def is_file_youtube_download(filename: str) -> bool:
     """Check if file is a YouTube download."""
+
+    # Check if file is a video
+    if not any(filename.endswith(x) for x in video_extensions):
+        return False
+
+    # Check if file contains a YouTube ID
     if filename[-16:-15] == "-":
         if not (" " in filename[-15:-4]):
             return True
@@ -29,18 +37,17 @@ def organise(conf=conf):
     ydl = youtube_dl.YoutubeDL(conf['ydl_opts'])
 
     for file in os.listdir("."):
-        if file.endswith(".mp4") or file.endswith(".flv"):
-            if is_file_youtube_download(file):
-                try:
-                    result = ydl.extract_info("https://www.youtube.com/watch?v=" + file[-15:-4], download=False)
-                    uploader_id = result['uploader_id']
-                    # json_data = json.loads(subprocess.check_output(["youtube-dl","-j", "https://www.youtube.com/watch?v="+file[-15:-4]]).decode("utf-8"))
-                except youtube_dl.utils.DownloadError:
-                    continue
-                if conf['debug']: print(uploader_id, "/", file.encode('charmap', errors='replace'))
+        if is_file_youtube_download(file):
+            try:
+                result = ydl.extract_info("https://www.youtube.com/watch?v=" + file[-15:-4], download=False)
+                uploader_id = result['uploader_id']
+                # json_data = json.loads(subprocess.check_output(["youtube-dl","-j", "https://www.youtube.com/watch?v="+file[-15:-4]]).decode("utf-8"))
+            except youtube_dl.utils.DownloadError:
+                continue
+            if conf['debug']: print(uploader_id, "/", file.encode('charmap', errors='replace'))
 
-                create_dir(uploader_id)
-                shutil.move(file, conf['organised_files_dir'] + "/" + uploader_id)
+            create_dir(uploader_id)
+            shutil.move(file, conf['organised_files_dir'] + "/" + uploader_id)
 
 
 def createlist(conf):
@@ -65,7 +72,7 @@ def createlist(conf):
                 file = path.split('/')[2]
                 uploader_id = path.split('/')[1]
 
-            if file.endswith(".mp4") or file.endswith(".flv") and is_file_youtube_download(file):
+            if is_file_youtube_download(file):
                 video_id = file[-15:-4]
                 if not video_id in data:
                     try:
